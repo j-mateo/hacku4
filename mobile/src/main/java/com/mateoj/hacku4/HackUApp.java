@@ -25,7 +25,4 @@ public class HackUApp extends Application{
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-
-
 }
