@@ -22,7 +22,10 @@ import butterknife.OnClick;
 public class InterestActivity extends AppCompatActivity {
     @Bind(R.id.button2)
     Button button;
+
+    @Bind(R.id.listView)
     ListView listView;
+
     ArrayAdapter<String> listAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class InterestActivity extends AppCompatActivity {
                 Log.i("Choice", listAdapter.getItem(position));
             }
         }
+
     }
 
 }
