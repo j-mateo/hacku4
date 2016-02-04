@@ -30,6 +30,10 @@
 
         </activity>
 
+        <activity android:name=".InformationActivity">
+
+        </activity>
+
         <service android:name=".GeofenceTransitionsIntentService"/>
 
         <activity
