@@ -63,6 +63,7 @@ dependencies {
     compile 'com.parse:parse-android:1.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.karumi:dexter:2.2.1'
 
     //Nice-to-haves
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'
