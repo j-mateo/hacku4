@@ -1,7 +1,7 @@
 package com.mateoj.hacku4;
 
-import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,18 +9,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import android.support.v7.app.ActionBarActivity;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 
 import org.joda.time.DateTime;
 
-public class MainActivity extends ActionBarActivity implements MyRecyclerViewAdapter.MyClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends LocationActivity implements MyRecyclerViewAdapter.MyClickListener {
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private static String LOG_TAG = "RecyclerViewActivity";
+    private boolean isQueryInProgress = false;
+    private boolean needsData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +42,13 @@ public class MainActivity extends ActionBarActivity implements MyRecyclerViewAda
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
-
-        // Code to Add an item with default animation
-        //((MyRecyclerViewAdapter) mAdapter).addItem(obj, index);
-
-        // Code to remove an item with default animation
-        //((MyRecyclerViewAdapter) mAdapter).deleteItem(index);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        ((MyRecyclerViewAdapter) mAdapter).setOnItemClickListener(new
-//                                                                          MyRecyclerViewAdapter.MyClickListener() {
-//                                                                              @Override
-//                                                                              public void onItemClick(int position, View v) {
-//                                                                                  Log.i(LOG_TAG, " Clicked on Item " + position);
-//                                                                              }
-//                                                                          });
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        needsData = true;
+    }
 
     private ArrayList<Event> getDataSet() {
         ArrayList results = new ArrayList<Event>();
@@ -77,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements MyRecyclerViewAda
         DateTime testDate = new DateTime();
 
         for (int i = 0; i < 5; i++) {
-            Event obj = new Event(names.get(i), locations.get(i), tags, testDescription, testDate, testDate);
+            Event obj = new Event();
 //            Event obj = new Event("Some Primary Text " + index, "Secondary " + index);
             results.add(i, obj);
         }
@@ -88,7 +81,38 @@ public class MainActivity extends ActionBarActivity implements MyRecyclerViewAda
     public void onItemClick(int position, View v) {
         Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(position), Toast.LENGTH_LONG);
         toast.show();
-        Intent i = new Intent(getApplicationContext(), InformationActivity.class);
+        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (isQueryInProgress || !needsData)
+            return;
+
+        ParseQuery<Building> buildingQuery = ParseQuery.getQuery(Building.class);
+
+        buildingQuery.whereNear(Building.KEY_LOCATION, new ParseGeoPoint(location.getLatitude(),
+                location.getLongitude()));
+        isQueryInProgress = true;
+        buildingQuery.findInBackground(new FindCallback<Building>() {
+            @Override
+            public void done(List<Building> objects, ParseException e) {
+                mAdapter.clear();
+                needsData = false;
+                isQueryInProgress = false;
+                for (Building building : objects) {
+                    ParseQuery<Event> eventQuery = ParseQuery.getQuery(Event.class);
+                    eventQuery.whereEqualTo("Location", building);
+                    eventQuery.findInBackground(new FindCallback<Event>() {
+                        @Override
+                        public void done(List<Event> objects, ParseException e) {
+                            Log.d("Event", objects.toString());
+                            mAdapter.addAll(objects);
+                        }
+                    });
+                }
+            }
+        });
     }
 }
