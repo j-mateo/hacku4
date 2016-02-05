@@ -1,7 +1,9 @@
 package com.mateoj.hacku4;
 
 import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.joda.time.DateTime;
 
@@ -33,9 +35,7 @@ public class Event extends ParseObject{
     public String getName() {
         return (getString("Name") == null) ? "" : getString("Name");
     }
-    public void setName(String text1) {
-        put("Name", text1);
-    }
+    public void setName(String text1) {put("Name", text1);}
 
     public Building getLocation() {
         return (Building) getParseObject("Location");
@@ -46,7 +46,7 @@ public class Event extends ParseObject{
     }
 
     public String getDescription() { return description; }
-    public void setDescription(String text3) { description = text3; }
+    public void setDescription(String text3) { put("Description",text3); }
 
     public DateTime getStart() {
         return getDate("Time") == null ?  new DateTime() : new DateTime(getDate("Time")) ;
@@ -56,11 +56,18 @@ public class Event extends ParseObject{
         return getDate("EndTime") == null ?  new DateTime() : new DateTime(getDate("EndTime")) ;
     }
 
-    public void setStart(DateTime date1) { start = date1; }
-    public void setEnd(DateTime date2) { end = date2; }
+    public void setStart(DateTime date1) { put("Time", date1.toDate()); }
+    public void setEnd(DateTime date2) { put("EndTime", date2.toDate()); }
+
+    public void setLocation(ParseGeoPoint point) {
+        put("UserLocation", point);
+    }
+
+    public void setOwner(ParseUser owner) { put("Owner", owner);}
 
     public ArrayList<String> getTags() { return tags; }
-    public void setTags(ArrayList<String> list1) { tags = list1; }
+    public void setTag(String tag) { put("Tags", tag); }
+    public String getTag() { return getString("Tags");}
     public void addTag(String newTag) { tags.add(newTag); }
     public void removeTag(String oldTag) {
         if (tags != null) {
