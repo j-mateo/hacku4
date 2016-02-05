@@ -90,8 +90,10 @@ public class FencesActivity extends LocationActivity implements ResultCallback{
         Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
         // calling addGeofences() and removeGeofences().
-        return PendingIntent.getService(this, 0, intent, PendingIntent.
+        mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
+
+        return mGeofencePendingIntent;
     }
 
     private GeofencingRequest getGeoFencingRequest(List<Geofence> geofences)
