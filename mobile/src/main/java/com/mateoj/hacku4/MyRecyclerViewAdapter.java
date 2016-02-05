@@ -80,6 +80,11 @@ public class MyRecyclerViewAdapter extends RecyclerView
         notifyDataSetChanged();
     }
 
+    public Event getItem(int position)
+    {
+        return mDataset.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return mDataset.size();
