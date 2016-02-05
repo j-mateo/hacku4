@@ -30,11 +30,11 @@ public class DetailActivity extends AppCompatActivity {
         eventName.setText(
                 "Arb Name Dude");
 
-        TextView eventTime = (TextView) findViewById(R.id.textView);
+        TextView eventTime = (TextView) findViewById(R.id.textView2);
         eventTime.setText(
                 "Arb Time Dude");
 
-        TextView location = (TextView) findViewById(R.id.textView);
+        TextView location = (TextView) findViewById(R.id.textView3);
         location.setText(
                 "Arb Location Dude");
     }
