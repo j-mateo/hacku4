@@ -28,7 +28,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
 
         <meta-data
             android:name="com.parse.APPLICATION_ID"
@@ -37,9 +37,9 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/parse_app_key"/>
 
-        <activity android:name=".MainActivity"
-                  android:theme="@style/AppTheme.NoActionBar" >
-
+    <activity
+        android:name=".MainActivity"
+        android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity android:name=".New_Activity_A">
@@ -80,6 +80,7 @@
         <activity
             android:name="com.parse.ui.ParseLoginActivity"
             android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:launchMode="singleTop">
             <meta-data
                 android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_ENABLED"
@@ -91,6 +92,14 @@
                 android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_ENABLED"
                 android:value="true"/>
         </activity>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service android:name="com.parse.PushService" />
         <!--<receiver android:name="com.parse.ParsePushBroadcastReceiver"-->

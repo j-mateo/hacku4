@@ -1,5 +1,6 @@
 package com.mateoj.hacku4;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ public class MyRecyclerViewAdapter extends RecyclerView
     private static String LOG_TAG = "MyRecyclerViewAdapter";
     private ArrayList<Event> mDataset;
     private MyClickListener myClickListener;
+
+
 
     public class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
@@ -34,10 +37,6 @@ public class MyRecyclerViewAdapter extends RecyclerView
         @Override
         public void onClick(View v) { myClickListener.onItemClick(getAdapterPosition(), v);
         }
-    }
-
-    public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
     }
 
     public MyRecyclerViewAdapter(ArrayList<Event> myDataset) {

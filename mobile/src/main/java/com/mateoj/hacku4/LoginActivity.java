@@ -3,7 +3,14 @@ package com.mateoj.hacku4;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -11,10 +18,15 @@ import com.parse.ui.ParseLoginBuilder;
 
 public class LoginActivity extends AppCompatActivity {
 
+
+    private Button loginOrLogoutButton;
+    private TextView titleTextView;
+    private ParseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ParseFacebookUtils.initialize(this);
         //loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
         if(ParseUser.getCurrentUser() == null || !ParseUser.getCurrentUser().isAuthenticated()) {
             ParseLoginBuilder builder = new ParseLoginBuilder(this);
@@ -24,17 +36,23 @@ public class LoginActivity extends AppCompatActivity {
         else{
             startActivity(new Intent(this, MainActivity.class));
         }
+    }
 
-
-        //Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);N
-
-        //ParseFacebookUtils.initialize(this);
+    private void showProfileLoggedOut() {
+        titleTextView.setText("You must log in!");
+        loginOrLogoutButton.setText("Log in");
 
     }
 
+    private void showProfileLoggedIn() {
+        titleTextView.setText("Welcome!!");
+        loginOrLogoutButton.setText("Log Out");
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         startActivity(new Intent(this, MainActivity.class));
     }
+
 }
