@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements MyRecyclerViewAda
     public void onItemClick(int position, View v) {
         Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(position), Toast.LENGTH_LONG);
         toast.show();
-        Intent i = new Intent(getApplicationContext(), InformationActivity.class);
-        startActivity(i);
+//        Intent i = new Intent(getApplicationContext(), InformationActivity.class);
+//       startActivity(i);
     }
 }
