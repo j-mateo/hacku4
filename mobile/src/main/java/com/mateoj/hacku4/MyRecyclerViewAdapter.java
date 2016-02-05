@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,8 @@ public class MyRecyclerViewAdapter extends RecyclerView
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.label.setText(mDataset.get(position).getName());
-        holder.dateTime.setText(mDataset.get(position).getStart().toString());
+        Minutes timeBegin = Minutes.minutesBetween(timeNow,mDataset.get(position).getStart());
+        holder.dateTime.setText("Starting in " + Integer.toString(timeBegin.getMinutes()) + " minutes!");
     }
 
     public void addItem(Event dataObj) {
