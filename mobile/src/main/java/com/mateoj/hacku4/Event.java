@@ -48,7 +48,9 @@ public class Event extends ParseObject{
     public String getDescription() { return description; }
     public void setDescription(String text3) { description = text3; }
 
-    public DateTime getStart() { return start; }
+    public DateTime getStart() {
+        return getDate("Time") == null ?  new DateTime() : new DateTime(getDate("Time")) ;
+    }
 
     public DateTime getEnd() {
         return getDate("EndTime") == null ?  new DateTime() : new DateTime(getDate("EndTime")) ;
