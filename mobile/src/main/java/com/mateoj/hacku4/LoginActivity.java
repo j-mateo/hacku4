@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showProfileLoggedOut() {
         titleTextView.setText("You must log in!");
         loginOrLogoutButton.setText("Log in");
+
     }
 
     private void showProfileLoggedIn() {

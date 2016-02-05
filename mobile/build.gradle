@@ -55,6 +55,26 @@ android {
 }
 
 dependencies {
+        //
+        //Core
+        compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
+
+        //Optional for built-in cards
+        compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
+
+        //Optional for RecyclerView
+        compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
+
+        //Optional for staggered grid view
+        //compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
+
+        //Optional for drag and drop
+        //compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
+
+        //Optional for twoway  (coming soon)
+        //compile 'com.github.gabrielemariotti.cards:cardslib-extra-twoway:2.1.0'
+
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support libs
@@ -69,7 +89,9 @@ dependencies {
     compile 'joda-time:joda-time:2.9.2'
 
     //play services
-    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
+    compile 'com.google.android.gms:play-services-location:8.3.0'
+
 
     //Utility libs
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -97,4 +119,5 @@ dependencies {
     //modules
     wearApp project(':wear')
 
+    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
 }

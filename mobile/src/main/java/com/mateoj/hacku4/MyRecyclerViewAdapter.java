@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MyRecyclerViewAdapter extends RecyclerView
         .Adapter<MyRecyclerViewAdapter
@@ -61,7 +60,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.label.setText(mDataset.get(position).getName());
-        holder.dateTime.setText(mDataset.get(position).getStart().toString("hh:mm", Locale.US));
+        holder.dateTime.setText(mDataset.get(position).getStart().toString());
     }
 
     public void addItem(Event dataObj) {

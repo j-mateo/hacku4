@@ -10,6 +10,11 @@ import com.parse.ParseObject;
 @ParseClassName("Building")
 public class Building extends ParseObject {
     public static final String KEY_LOCATION ="LatLong";
+
+    public String getName() {
+        return getString("Name");
+    }
+
     @Override
     public String toString() {
         return getString("Name");
