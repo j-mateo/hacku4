@@ -180,5 +180,12 @@
             android:text="Now Specify Location!"
             android:id="@+id/next_button"
             android:textSize="16dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Event"
+            android:id="@+id/submitButton"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </ScrollView>

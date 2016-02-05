@@ -1,5 +1,6 @@
 package com.mateoj.hacku4;
 
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -47,11 +49,8 @@ public class New_Activity_B extends AppCompatActivity {
             Log.v("New_Activity_B.java", "Tag " + Integer.toString(i) + " " + tags.get(i));
         }
 
-//        Marker m = getMap().addMarker(new MarkerOptions()
-//            .position(0,0)
-//        .title("Blerg"));
-//        nextScreen = (Button) findViewById(R.id.event_creation_button);
 
+        nextScreen = (Button) findViewById(R.id.event_creation_button);
         nextScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,19 +61,26 @@ public class New_Activity_B extends AppCompatActivity {
                 DateTime timeNow = new DateTime();
                 newEvent.setStart(timeNow.plusMinutes(timeTill));
                 newEvent.setEnd(timeNow.plusMinutes(timeTill + timeDuration));
-                newEvent.setTags(tags);
-                newEvent.saveInBackground();
+
             }
         });
 
-    }
 
-//    public void onMapReady(GoogleMap map) {
-//        eventMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragment2)).getMap();
-//        eventMap.addMarker(new MarkerOptions()
-//                .position(new LatLng(0, 0))
-//                .title("Hello World"));
+    }
+   // @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mapFragment = new MainMapFragment();
+//
+//        SupportMapFragment mapFrag=(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.fragment2);
+//
+//        mapFragment.placeMarker(mapFrag);
 //    }
+//    public void onMapReady() {
+//
+//    }
+
+
 
 
 }
