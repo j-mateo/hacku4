@@ -206,6 +206,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
             @Override
             public void done(List<Event> objects, ParseException e) {
                 Log.d("Event", objects.toString());
+                mAdapter.clear();
                 mAdapter.addAll(objects);
             }
         });
