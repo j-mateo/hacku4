@@ -18,6 +18,7 @@ public class HackUApp extends Application{
         super.onCreate();
         Parse.initialize(this);
         ParseObject.registerSubclass(Building.class);
+        ParseObject.registerSubclass(Event.class);
     }
 
     @Override
