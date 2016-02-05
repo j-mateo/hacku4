@@ -1,13 +1,11 @@
 package com.mateoj.hacku4;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -44,12 +42,6 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         mRecyclerView.addItemDecoration(itemDecoration);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        needsData = true;
-    }
-
     private ArrayList<Event> getDataSet() {
         ArrayList results = new ArrayList<Event>();
 
@@ -79,10 +71,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
 
     @Override
     public void onItemClick(int position, View v) {
-        Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(position), Toast.LENGTH_LONG);
-        toast.show();
-        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-        startActivity(i);
+        startActivity(DetailActivity.getLaunchIntent(this, mAdapter.getItem(position)));
     }
 
     @Override
