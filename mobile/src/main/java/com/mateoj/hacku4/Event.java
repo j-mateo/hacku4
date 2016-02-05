@@ -33,9 +33,7 @@ public class Event extends ParseObject{
     public String getName() {
         return (getString("Name") == null) ? "" : getString("Name");
     }
-    public void setName(String text1) {
-        put("Name", text1);
-    }
+    public void setName(String text1) {put("Name", text1);}
 
     public Building getLocation() {
         return (Building) getParseObject("Location");

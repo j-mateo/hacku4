@@ -45,18 +45,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        TextView eventName = (TextView) findViewById(R.id.textView);
-        eventName.setText(
-                "Arb Name Dude");
-
-        TextView eventTime = (TextView) findViewById(R.id.textView2);
-        eventTime.setText(
-                "Arb Time Dude");
-
-        TextView location = (TextView) findViewById(R.id.textView3);
-        location.setText(
-                "Arb Location Dude");
-
         if (getIntent().hasExtra(EXTRA_EVENT_ID)) {
             String objectId = getIntent().getStringExtra(EXTRA_EVENT_ID);
             fetchEvent(objectId);
@@ -82,6 +70,7 @@ public class DetailActivity extends AppCompatActivity {
     private void initEvent(Event event) {
         title.setText(event.getName());
         subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+
     }
 
     public static Intent getLaunchIntent(Context context, Event event) {
