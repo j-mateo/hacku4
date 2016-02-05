@@ -29,7 +29,9 @@ import com.parse.ParseQuery;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends LocationActivity implements MyRecyclerViewAdapter.MyClickListener,
         ResultCallback {
@@ -170,28 +172,6 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
 
     private ArrayList<Event> getDataSet() {
         ArrayList results = new ArrayList<Event>();
-
-        ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> locations = new ArrayList<>();
-        ArrayList<String> tags = new ArrayList<>();
-
-        names.add("Kayaking"); names.add("Studying"); names.add("Sucking helium from balloons"); names.add("Party Fun Time!!!"); names.add("Panic over CSCI 301 project");
-        locations.add("Matoaka"); locations.add("Swem"); locations.add("Sadler Center"); locations.add("Sunken Garden"); locations.add("McGlothlin Hall");
-        tags.add("fun"); tags.add("boring");
-
-        String testDescription = "It's exactly what it sounds like.";
-
-//        Date testDate = new Date();
-//        SimpleDateFormat ft = new SimpleDateFormat ("E MM-DD-YYYY 'at' hh:mm:ss a zzz");
-        // System.out.println("Current Date: " + ft.format(dNow));
-
-        DateTime testDate = new DateTime();
-
-        for (int i = 0; i < 5; i++) {
-            Event obj = new Event();
-//            Event obj = new Event("Some Primary Text " + index, "Secondary " + index);
-            results.add(i, obj);
-        }
         return results;
     }
 
@@ -213,39 +193,57 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         if (mLastLocation == null)
             return;
 
-        ParseQuery<Building> buildingQuery = ParseQuery.getQuery(Building.class);
 
-        buildingQuery.whereNear(Building.KEY_LOCATION, new ParseGeoPoint(mLastLocation.getLatitude(),
-                mLastLocation.getLongitude()));
-        isQueryInProgress = true;
+        ParseQuery<Event> eventQuery = ParseQuery.getQuery(Event.class);
+//        eventQuery.whereEqualTo("Location", building);
+        eventQuery.whereEqualTo("Tags",mSort);
 
-//        if (mSort.equals("upcoming")) {
-//            buildingQuery.orderByAscending("Time");
-//        } else {
-//            buildingQuery.orderByAscending("Location");
-//        }
+        org.joda.time.DateTime zulu = new DateTime(new Date()).toDateTime( org.joda.time.DateTimeZone.UTC );
 
-
-
-        buildingQuery.findInBackground(new FindCallback<Building>() {
+        eventQuery.whereGreaterThan("EndTime", zulu.toDate());
+        eventQuery.orderByAscending("Time");
+        eventQuery.findInBackground(new FindCallback<Event>() {
             @Override
-            public void done(List<Building> objects, ParseException e) {
-                mAdapter.clear();
-                needsData = false;
-                isQueryInProgress = false;
-                for (Building building : objects) {
-                    ParseQuery<Event> eventQuery = ParseQuery.getQuery(Event.class);
-                    eventQuery.whereEqualTo("Location", building);
-                    eventQuery.whereEqualTo("Tags",mSort);
-                    eventQuery.findInBackground(new FindCallback<Event>() {
-                        @Override
-                        public void done(List<Event> objects, ParseException e) {
-                            Log.d("Event", objects.toString());
-                            mAdapter.addAll(objects);
-                        }
-                    });
-                }
+            public void done(List<Event> objects, ParseException e) {
+                Log.d("Event", objects.toString());
+                mAdapter.addAll(objects);
             }
         });
+
+
+//        ParseQuery<Building> buildingQuery = ParseQuery.getQuery(Building.class);
+//
+//        buildingQuery.whereNear(Building.KEY_LOCATION, new ParseGeoPoint(mLastLocation.getLatitude(),
+//                mLastLocation.getLongitude()));
+//        isQueryInProgress = true;
+//
+////        if (mSort.equals("upcoming")) {
+////            buildingQuery.orderByAscending("Time");
+////        } else {
+////            buildingQuery.orderByAscending("Location");
+////        }
+//
+//
+//
+//        buildingQuery.findInBackground(new FindCallback<Building>() {
+//            @Override
+//            public void done(List<Building> objects, ParseException e) {
+//                mAdapter.clear();
+//                needsData = false;
+//                isQueryInProgress = false;
+//                for (Building building : objects) {
+//                    ParseQuery<Event> eventQuery = ParseQuery.getQuery(Event.class);
+//                    eventQuery.whereEqualTo("Location", building);
+//                    eventQuery.whereEqualTo("Tags",mSort);
+//                    eventQuery.findInBackground(new FindCallback<Event>() {
+//                        @Override
+//                        public void done(List<Event> objects, ParseException e) {
+//                            Log.d("Event", objects.toString());
+//                            mAdapter.addAll(objects);
+//                        }
+//                    });
+//                }
+//            }
+//        });
     }
 }
