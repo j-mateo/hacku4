@@ -8,6 +8,7 @@ import com.parse.ParseUser;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -65,6 +66,9 @@ public class Event extends ParseObject{
 
     public void setOwner(ParseUser owner) { put("Owner", owner);}
 
+    public ArrayList<ParseUser> getUsersGoing() {
+        return (ArrayList) getList("UsersGoing");
+    }
     public ArrayList<String> getTags() { return tags; }
     public void setTag(String tag) { put("Tags", tag); }
     public String getTag() { return getString("Tags");}

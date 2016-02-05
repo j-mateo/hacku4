@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -41,9 +42,12 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Bind(R.id.usersGoing)
     RecyclerView usersGoing;
 
+    private UsersListViewAdapter mUsersGoingAdapter;
+
     private Event mEvent;
     private boolean isMapReady = false;
     private GoogleMap mGoogleMap;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +57,16 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        usersGoing.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        usersGoing.setLayoutManager(mLayoutManager);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
                 mEvent.addUnique("UsersGoing", ParseUser.getCurrentUser());
                 mEvent.saveInBackground(new SaveCallback() {
                     @Override
@@ -101,6 +109,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         mEvent = event;
         title.setText(event.getName());
         subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+        usersGoing.setAdapter(new UsersListViewAdapter(event.getUsersGoing()));
         if (isMapReady) {
             moveCameraToLocation();
         }
