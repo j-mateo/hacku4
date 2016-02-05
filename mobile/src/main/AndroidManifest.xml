@@ -13,6 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
     <meta-data
         android:name="com.parse.APPLICATION_ID"
         android:value="@string/parse_app_id"/>
@@ -23,6 +24,14 @@
     <activity android:name=".MainActivity">
 
     </activity>
+
+    <activity android:name=".New_Activity_A">
+        <intent-filter android:label="@string/app_name">
+            <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+        </activity>
+
     <activity android:name=".LoginActivity">
         <intent-filter android:label="@string/app_name">
             <action android:name="android.intent.action.MAIN"/>
@@ -30,8 +39,6 @@
         </intent-filter>
     </activity>
 
-    <activity android:name=".InformationActivity">
-    </activity>
     <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
