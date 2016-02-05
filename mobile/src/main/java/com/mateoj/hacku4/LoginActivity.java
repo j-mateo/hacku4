@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -24,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ParseFacebookUtils.initialize(this);
         //loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
         if(ParseUser.getCurrentUser() == null || !ParseUser.getCurrentUser().isAuthenticated()) {
             ParseLoginBuilder builder = new ParseLoginBuilder(this);
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         startActivity(new Intent(this, MainActivity.class));
     }
 

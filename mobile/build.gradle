@@ -94,6 +94,7 @@ dependencies {
 
 
     //Utility libs
+    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
