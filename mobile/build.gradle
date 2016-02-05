@@ -86,7 +86,7 @@ dependencies {
     compile 'com.parse:parseui-widget-android:0.0.1'
 
     //Nice-to-haves
-    compile 'uk.co.chrisjenx:calligraphy:1.2.0'
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.cleveroad:slidingtutorial:0.9'
 
     //test libs
