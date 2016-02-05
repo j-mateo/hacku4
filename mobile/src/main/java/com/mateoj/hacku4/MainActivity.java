@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
@@ -23,7 +22,6 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
 import org.joda.time.DateTime;
@@ -31,7 +29,6 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends LocationActivity implements MyRecyclerViewAdapter.MyClickListener,
         ResultCallback {
@@ -199,7 +196,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         org.joda.time.DateTime zulu = new DateTime(new Date()).toDateTime( org.joda.time.DateTimeZone.UTC );
 
         eventQuery.whereGreaterThan("Time", zulu.toDate());
-        eventQuery.orderByAscending("Time");git
+        eventQuery.orderByAscending("Time");
         eventQuery.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {
