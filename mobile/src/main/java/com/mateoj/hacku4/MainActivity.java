@@ -25,6 +25,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
     private RecyclerView.LayoutManager mLayoutManager;
     private static String LOG_TAG = "RecyclerViewActivity";
     private boolean isQueryInProgress = false;
+    private boolean needsData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,12 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        needsData = true;
     }
 
     private ArrayList<Event> getDataSet() {
@@ -80,7 +87,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
 
     @Override
     public void onLocationChanged(Location location) {
-        if (isQueryInProgress)
+        if (isQueryInProgress || !needsData)
             return;
 
         ParseQuery<Building> buildingQuery = ParseQuery.getQuery(Building.class);
@@ -92,6 +99,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
             @Override
             public void done(List<Building> objects, ParseException e) {
                 mAdapter.clear();
+                needsData = false;
                 isQueryInProgress = false;
                 for (Building building : objects) {
                     ParseQuery<Event> eventQuery = ParseQuery.getQuery(Event.class);
