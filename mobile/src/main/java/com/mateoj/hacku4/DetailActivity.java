@@ -1,5 +1,7 @@
 package com.mateoj.hacku4;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
+    public static final String EXTRA_EVENT_ID = "eventId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,11 @@ public class DetailActivity extends AppCompatActivity {
                 "Arb Location Dude");
     }
 
+    public static Intent getLaunchIntent(Context context, Event event) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(EXTRA_EVENT_ID, event.getObjectId());
 
+        return intent;
+    }
 
 }
