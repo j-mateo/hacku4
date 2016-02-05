@@ -1,5 +1,7 @@
 package com.mateoj.hacku4;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,13 +9,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class DetailActivity extends AppCompatActivity {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.Locale;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public static final String EXTRA_EVENT_ID = "eventId";
+    @Bind(R.id.textView)
+    TextView title;
+
+    @Bind(R.id.textView2)
+    TextView subtitle;
+
+    private Event mEvent;
+    private boolean isMapReady = false;
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -26,19 +55,62 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        TextView eventName = (TextView) findViewById(R.id.textView);
-        eventName.setText(
-                "Arb Name Dude");
+        if (getIntent().hasExtra(EXTRA_EVENT_ID)) {
+            String objectId = getIntent().getStringExtra(EXTRA_EVENT_ID);
+            fetchEvent(objectId);
+        } else {
+            throw new IllegalArgumentException("Must instantiate using the getLaunchIntent");
+        }
 
-        TextView eventTime = (TextView) findViewById(R.id.textView);
-        eventTime.setText(
-                "Arb Time Dude");
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(this);
 
-        TextView location = (TextView) findViewById(R.id.textView);
-        location.setText(
-                "Arb Location Dude");
     }
 
+    private void fetchEvent(String objectId) {
+        ParseQuery.getQuery(Event.class)
+                .include("Location")
+                .getInBackground(objectId, new GetCallback<Event>() {
+                    @Override
+                    public void done(Event object, ParseException e) {
+                        if (e != null) {
+                            Toast.makeText(DetailActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            initEvent(object);
+                        }
+                    }
+                });
+    }
 
+    private void initEvent(Event event) {
+        mEvent = event;
+        title.setText(event.getName());
+        subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+        if (isMapReady) {
+            moveCameraToLocation();
+        }
 
+    }
+
+    private void moveCameraToLocation() {
+        LatLng location = new LatLng(mEvent.getLocation().getLocation().getLatitude(), mEvent.getLocation().getLocation().getLongitude());
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+        mGoogleMap.addMarker(new MarkerOptions().position(location).title(mEvent.getLocation().getName()));
+    }
+
+    public static Intent getLaunchIntent(Context context, Event event) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(EXTRA_EVENT_ID, event.getObjectId());
+
+        return intent;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        isMapReady = true;
+        mGoogleMap = googleMap;
+        if (mEvent != null) {
+            moveCameraToLocation();
+        }
+    }
 }
