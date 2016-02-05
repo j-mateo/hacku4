@@ -24,6 +24,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -54,6 +55,8 @@ public class New_Activity_A extends AppCompatActivity {
     boolean nlbool = false;
     boolean enterbool = false;
     boolean miscbool = false;
+
+    DateTime timeNow;
 
     int PLACE_PICKER_REQUEST = 1;
 
@@ -254,8 +257,15 @@ public class New_Activity_A extends AppCompatActivity {
     private JSONObject getPushData(Event event) {
         JSONObject jsonObject = new JSONObject();
         try {
+            String str = "New event \"";
+            str += event.getName();
+            str += "\" in ";
+            timeNow = new DateTime();
+            Minutes timeBegin = Minutes.minutesBetween(timeNow,event.getStart());
+            str += Integer.toString(timeBegin.getMinutes());
+            str += " minutes!";
             jsonObject.put("eventId", event.getObjectId());
-            jsonObject.put("alert", event.getName());
+            jsonObject.put("alert", str);
         } catch (JSONException e) {
             e.printStackTrace();
         }
