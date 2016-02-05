@@ -199,7 +199,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         org.joda.time.DateTime zulu = new DateTime(new Date()).toDateTime( org.joda.time.DateTimeZone.UTC );
 
         eventQuery.whereGreaterThan("Time", zulu.toDate());
-        eventQuery.orderByAscending("Time");git
+        eventQuery.orderByAscending("Time");
         eventQuery.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {

@@ -68,7 +68,7 @@ public class New_Activity_A extends AppCompatActivity {
                 Place place = PlacePicker.getPlace(data, this);
                 mPlace = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
                 String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }
     }
