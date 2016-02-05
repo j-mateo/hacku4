@@ -56,6 +56,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Events near you");
         initSortSpinner();
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -64,9 +65,9 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         mAdapter = new MyRecyclerViewAdapter(getDataSet());
         mAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-        mRecyclerView.addItemDecoration(itemDecoration);
+       // RecyclerView.ItemDecoration itemDecoration =
+       //         new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+       // mRecyclerView.addItemDecoration(itemDecoration);
 
         createEvent = (FloatingActionButton) findViewById(R.id.fab2);
         createEvent.setOnClickListener(new View.OnClickListener() {
