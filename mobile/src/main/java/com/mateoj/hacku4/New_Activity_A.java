@@ -74,6 +74,7 @@ public class New_Activity_A extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__activity_a);
+        getSupportActionBar().setTitle("Make an Event");
 
         eventName = (EditText) findViewById(R.id.event_name);
         eventDescription = (EditText) findViewById(R.id.event_description);
