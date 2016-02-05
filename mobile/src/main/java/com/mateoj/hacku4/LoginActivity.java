@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.parse.Parse;
+
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -16,40 +16,25 @@ import com.parse.ui.ParseLoginBuilder;
 
 public class LoginActivity extends AppCompatActivity {
 
+
     private Button loginOrLogoutButton;
     private TextView titleTextView;
     private ParseUser currentUser;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ParseLoginBuilder builder = new ParseLoginBuilder(LoginActivity.this);
-        startActivityForResult(builder.build(), 0);
-       /* loginOrLogoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentUser.getCurrentUser() != null || currentUser.isAuthenticated()) {
-                    // User clicked to log out.
-                    ParseUser.logOut();
-                    currentUser = null;
-                    showProfileLoggedOut();
-                } else {
-                    // User clicked to log in.
-                    ParseLoginBuilder builder = new ParseLoginBuilder(LoginActivity.this);
-                    startActivityForResult(builder.build(), 0);
-                }
-            }
-        });*/
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                showProfileLoggedIn();
-            }
+        //loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
+        if(ParseUser.getCurrentUser() == null) {
+            ParseLoginBuilder builder = new ParseLoginBuilder(this);
+            builder.setAppLogo(R.mipmap.ic_launcher);
+            startActivityForResult(builder.build(), 0);
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        else{
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
     private void showProfileLoggedOut() {
@@ -60,7 +45,11 @@ public class LoginActivity extends AppCompatActivity {
     private void showProfileLoggedIn() {
         titleTextView.setText("Welcome!!");
         loginOrLogoutButton.setText("Log Out");
-
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        startActivity(new Intent(this, InterestActivity.class));
     }
 
 }
