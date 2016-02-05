@@ -44,12 +44,6 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         mRecyclerView.addItemDecoration(itemDecoration);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        needsData = true;
-    }
-
     private ArrayList<Event> getDataSet() {
         ArrayList results = new ArrayList<Event>();
 
