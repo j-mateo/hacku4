@@ -1,5 +1,7 @@
 package com.mateoj.hacku4;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class New_Activity_A extends AppCompatActivity {
 
@@ -57,8 +61,9 @@ public class New_Activity_A extends AppCompatActivity {
         food.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!foodbool) { foodbool = true;
-                } else { foodbool = false; }
+                if (!foodbool) { foodbool = true; food.setTypeface(null, Typeface.BOLD);
+
+                } else { foodbool = false; food.setTypeface(Typeface.DEFAULT); }
             Log.v("New_Activity_A.java", "Clicked food -- changed to " + foodbool);
             }
         });
@@ -66,8 +71,8 @@ public class New_Activity_A extends AppCompatActivity {
         sports.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!sportsbool) { sportsbool = true;
-                } else { sportsbool = false; }
+                if (!sportsbool) { sportsbool = true; sports.setTypeface(null, Typeface.BOLD);
+                } else { sportsbool = false; sports.setTypeface(Typeface.DEFAULT); }
                 Log.v("New_Activity_A.java", "Clicked sports -- changed to " + sportsbool);
             }
         });
@@ -75,8 +80,8 @@ public class New_Activity_A extends AppCompatActivity {
         academic.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!acadbool) { acadbool = true;
-                } else { acadbool = false; }
+                if (!acadbool) { acadbool = true; academic.setTypeface(null, Typeface.BOLD);
+                } else { acadbool = false; academic.setTypeface(Typeface.DEFAULT); }
                 Log.v("New_Activity_A.java", "Clicked academic -- changed to " + acadbool);
             }
         });
@@ -84,8 +89,8 @@ public class New_Activity_A extends AppCompatActivity {
         nightlife.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!nlbool) { nlbool = true;
-                } else { nlbool = false; }
+                if (!nlbool) { nlbool = true; nightlife.setTypeface(null, Typeface.BOLD);
+                } else { nlbool = false; nightlife.setTypeface(Typeface.DEFAULT); }
                 Log.v("New_Activity_A.java", "Clicked nightlife -- changed to " + nlbool);
             }
         });
@@ -93,8 +98,8 @@ public class New_Activity_A extends AppCompatActivity {
         entertainment.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!enterbool) { enterbool = true;
-                } else { enterbool = false; }
+                if (!enterbool) { enterbool = true; entertainment.setTypeface(null, Typeface.BOLD);
+                } else { enterbool = false; entertainment.setTypeface(Typeface.DEFAULT); }
                 Log.v("New_Activity_A.java", "Clicked entertainment -- changed to " + enterbool);
             }
         });
@@ -102,8 +107,8 @@ public class New_Activity_A extends AppCompatActivity {
         misc.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!miscbool) { miscbool = true;
-                } else { miscbool = false; }
+                if (!miscbool) { miscbool = true; misc.setTypeface(null, Typeface.BOLD);
+                } else { miscbool = false; misc.setTypeface(Typeface.DEFAULT); }
                 Log.v("New_Activity_A.java", "Clicked misc -- changed to " + miscbool);
             }
         });
@@ -112,6 +117,22 @@ public class New_Activity_A extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.v("New_Activity_A.java", "Clicked to proceed to next page!");
+                Intent i = new Intent(New_Activity_A.this, New_Activity_B.class);
+                i.putExtra("myName", eventName.getText().toString());
+                i.putExtra("myDescription", eventDescription.getText().toString());
+                i.putExtra("time_till", timeTill.getProgress());
+                i.putExtra("time_duration", duration.getProgress());
+
+                ArrayList<String> myTags = new ArrayList<>();
+                if(foodbool) { myTags.add("Food"); }
+                if(sportsbool) { myTags.add("Sport"); }
+                if(acadbool) { myTags.add("Academic"); }
+                if(nlbool) { myTags.add("Night Life"); }
+                if(enterbool) { myTags.add("Entertainment"); }
+                if(miscbool) { myTags.add("Miscellaneous"); }
+
+                i.putStringArrayListExtra("myTags", myTags);
+                startActivity(i);
             }
         });
 
@@ -123,6 +144,7 @@ public class New_Activity_A extends AppCompatActivity {
                 until.setText(Integer.toString(progress) + " minutes");
                 Log.v("New_Activity_A.java", "Changed time until to " + Integer.toString(progress) + " minutes.");
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -136,11 +158,14 @@ public class New_Activity_A extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 TextView dur = (TextView) findViewById(R.id.min_long);
-                dur.setText(Integer.toString(progress)+ " minutes");
+                dur.setText(Integer.toString(progress) + " minutes");
                 Log.v("New_Activity_A.java", "Changed duration to " + Integer.toString(progress) + " minutes.");
             }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
