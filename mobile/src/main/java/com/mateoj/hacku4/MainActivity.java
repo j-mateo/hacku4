@@ -1,5 +1,9 @@
 package com.mateoj.hacku4;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -17,11 +26,17 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LocationActivity implements MyRecyclerViewAdapter.MyClickListener {
+public class MainActivity extends LocationActivity implements MyRecyclerViewAdapter.MyClickListener,
+        ResultCallback {
+
+    public static String TAG = MainActivity.class.getSimpleName();
+    public static final String PREFS_APP = "appPreferences";
+    public static final String KEY_LAUNCHED = "appLaunched";
+    private PendingIntent mGeofencePendingIntent;
+    private StringPreference firstLaunchedPref;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private static String LOG_TAG = "RecyclerViewActivity";
     private boolean isQueryInProgress = false;
     private boolean needsData = true;
 
@@ -39,7 +54,82 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
+
+        init();
     }
+
+    private Geofence buildFenceFromBuilding(Building building) {
+        return new Geofence.Builder()
+                .setRequestId(building.getObjectId())
+                .setCircularRegion(building.getLocation().getLatitude(),
+                        building.getLocation().getLongitude(), 100)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+    }
+
+
+    @Override
+    public void onResult(Result result) {
+        Log.d(TAG, result.toString());
+    }
+
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+
+        return mGeofencePendingIntent;
+    }
+
+    private GeofencingRequest getGeoFencingRequest(List<Geofence> geofences)
+    {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(geofences);
+        return builder.build();
+    }
+
+    private void init() {
+        SharedPreferences sp = getSharedPreferences(PREFS_APP, Context.MODE_PRIVATE);
+        firstLaunchedPref = new StringPreference(sp, KEY_LAUNCHED);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        super.onConnected(bundle);
+        if (!firstLaunchedPref.isSet()) {
+            setUpGeofences();
+            firstLaunchedPref.set("yes");
+        }
+    }
+    private void setUpGeofences() {
+        ParseQuery<Building> query = ParseQuery.getQuery("Building");
+        query.findInBackground(new FindCallback<Building>() {
+            @Override
+            public void done(List<Building> objects, ParseException e) {
+                List<Geofence> geofences = new ArrayList<>();
+
+                for (Building building : objects) {
+                    geofences.add(buildFenceFromBuilding(building));
+                }
+                LocationServices.GeofencingApi.addGeofences(
+                        mGoogleApiClient,
+                        getGeoFencingRequest(geofences),
+                        getGeofencePendingIntent()
+                ).setResultCallback(MainActivity.this);
+            }
+        });
+    }
+
+
 
     private ArrayList<Event> getDataSet() {
         ArrayList results = new ArrayList<Event>();
