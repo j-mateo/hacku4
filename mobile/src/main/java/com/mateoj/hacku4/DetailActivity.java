@@ -21,6 +21,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.Locale;
 
@@ -53,6 +54,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+            mEvent.add("UsersGoing", ParseUser.getCurrentUser());
             }
         });
 
