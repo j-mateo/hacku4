@@ -21,7 +21,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextView titleTextView;
     private ParseUser currentUser;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
