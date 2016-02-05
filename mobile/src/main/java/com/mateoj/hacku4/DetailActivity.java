@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.Locale;
 
@@ -35,6 +37,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Bind(R.id.textView2)
     TextView subtitle;
+
+    @Bind(R.id.usersGoing)
+    RecyclerView usersGoing;
 
     private Event mEvent;
     private boolean isMapReady = false;
@@ -54,8 +59,13 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-            mEvent.add("UsersGoing", ParseUser.getCurrentUser());
+                mEvent.addUnique("UsersGoing", ParseUser.getCurrentUser());
+                mEvent.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        initEvent(mEvent);
+                    }
+                });
             }
         });
 
@@ -74,6 +84,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     private void fetchEvent(String objectId) {
         ParseQuery.getQuery(Event.class)
                 .include("Location")
+                .include("UsersGoing")
                 .getInBackground(objectId, new GetCallback<Event>() {
                     @Override
                     public void done(Event object, ParseException e) {
