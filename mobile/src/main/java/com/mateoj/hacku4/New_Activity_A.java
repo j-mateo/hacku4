@@ -120,7 +120,7 @@ public class New_Activity_A extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 TextView until = (TextView) findViewById(R.id.min_until);
-                until.setText(progress);
+                until.setText(Integer.toString(progress) + " minutes");
                 Log.v("New_Activity_A.java", "Changed time until to " + Integer.toString(progress) + " minutes.");
             }
             @Override
@@ -136,7 +136,7 @@ public class New_Activity_A extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 TextView dur = (TextView) findViewById(R.id.min_long);
-                dur.setText(progress);
+                dur.setText(Integer.toString(progress)+ " minutes");
                 Log.v("New_Activity_A.java", "Changed duration to " + Integer.toString(progress) + " minutes.");
             }
             @Override

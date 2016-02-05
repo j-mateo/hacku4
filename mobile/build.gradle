@@ -4,7 +4,6 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
-
     dexOptions {
         javaMaxHeapSize "4g"
         preDexLibraries = false
@@ -82,6 +81,9 @@ dependencies {
     compile 'com.parse:parse-android:1.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.karumi:dexter:2.2.1'
+    compile 'com.parse:parseui-login-android:0.0.1'
+    compile 'com.parse:parseui-widget-android:0.0.1'
 
     //Nice-to-haves
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'

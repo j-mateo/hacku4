@@ -17,19 +17,25 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Name"
             android:textAlignment="center"
             android:id="@+id/event_name"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
             android:editable="true" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Event Name"
+            android:id="@+id/title_text"
+            android:layout_gravity="center_horizontal" />
+
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="117dp"
+            android:layout_height="95dp"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:text="Event Description"
             android:textAlignment="center"
             android:id="@+id/event_description"
             android:layout_gravity="center_horizontal"
@@ -41,10 +47,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Description"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Select Relevant Tags:"
             android:id="@+id/tags_text"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="15dp" />
+            android:paddingTop="25dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -115,30 +129,23 @@
             android:id="@+id/textView3"
             android:gravity="center_horizontal|bottom" />
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <SeekBar
+            android:layout_width="316dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_till_seekBar"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:max="60"
+            android:indeterminate="false" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <SeekBar
-                android:layout_width="316dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/time_till_seekBar"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:max="60"
-                android:indeterminate="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/min_until"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingTop="4dp" />
-        </LinearLayout>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0 minutes"
+            android:id="@+id/min_until"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="4dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -148,30 +155,24 @@
             android:id="@+id/textView4"
             android:gravity="center_horizontal|bottom" />
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <SeekBar
+            android:layout_width="315dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/duration_seekBar"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:max="120"
+            android:indeterminate="false" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <SeekBar
-                android:layout_width="315dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/duration_seekBar"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:max="120"
-                android:indeterminate="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/min_long"
-                android:paddingTop="4dp" />
-
-        </LinearLayout>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0 minutes"
+            android:id="@+id/min_long"
+            android:paddingTop="4dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="15dp" />
 
         <Button
             android:layout_width="match_parent"

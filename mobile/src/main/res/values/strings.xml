@@ -92,4 +92,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_fences">FencesActivity</string>
+    <string name="title_activity_interest">Interests</string>
+    <string name="title_activity_detail">Details</string>
 </resources>
