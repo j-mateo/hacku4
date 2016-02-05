@@ -95,5 +95,5 @@
     <string name="title_activity_fences">FencesActivity</string>
     <string name="title_activity_interest">Interests</string>
     <string name="title_activity_detail">Details</string>
-    <color name="lightgray">#CCCCCC</color>
+    <color name="aquamarine">#65bdb0</color>
 </resources>
