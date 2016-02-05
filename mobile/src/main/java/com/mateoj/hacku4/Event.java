@@ -55,7 +55,7 @@ public class Event extends ParseObject{
     }
 
     public void setStart(DateTime date1) { start = date1; }
-    public void getEnd(DateTime date2) { end = date2; }
+    public void setEnd(DateTime date2) { end = date2; }
 
     public ArrayList<String> getTags() { return tags; }
     public void setTags(ArrayList<String> list1) { tags = list1; }
