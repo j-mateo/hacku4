@@ -19,7 +19,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.Locale;
 
@@ -53,6 +55,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+            mEvent.add("UsersGoing", ParseUser.getCurrentUser());
             }
         });
 
@@ -94,9 +98,19 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void moveCameraToLocation() {
-        LatLng location = new LatLng(mEvent.getLocation().getLocation().getLatitude(), mEvent.getLocation().getLocation().getLongitude());
+        ParseGeoPoint geoPoint;
+        String title;
+        if (mEvent.getLocation() == null) {
+            geoPoint = mEvent.getParseGeoPoint("UserLocation");
+            title = mEvent.getName();
+        } else {
+            geoPoint = mEvent.getLocation().getLocation();
+            title = mEvent.getLocation().getName();
+        }
+
+        LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-        mGoogleMap.addMarker(new MarkerOptions().position(location).title(mEvent.getLocation().getName()));
+        mGoogleMap.addMarker(new MarkerOptions().position(location).title(title));
     }
 
     public static Intent getLaunchIntent(Context context, Event event) {

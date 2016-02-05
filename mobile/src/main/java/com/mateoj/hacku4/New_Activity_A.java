@@ -24,6 +24,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -204,7 +206,7 @@ public class New_Activity_A extends AppCompatActivity {
                         } else {
                             ParsePush push = new ParsePush();
                             push.setChannel(newEvent.getTag());
-                            push.setMessage(newEvent.getName());
+                            push.setData(getPushData(newEvent));
                             push.sendInBackground();
                         }
                     }
@@ -247,6 +249,17 @@ public class New_Activity_A extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+    }
+
+    private JSONObject getPushData(Event event) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("eventId", event.getObjectId());
+            jsonObject.put("alert", event.getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 }

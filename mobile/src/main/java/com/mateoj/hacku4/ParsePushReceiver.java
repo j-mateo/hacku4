@@ -6,12 +6,15 @@ import android.content.Intent;
 
 import com.parse.ParsePushBroadcastReceiver;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by jose on 2/5/16.
  */
 public class ParsePushReceiver extends ParsePushBroadcastReceiver {
     public static final String TAG = ParsePushReceiver.class.getName();
-    public static final String KEY_APPTENTIVE = "apptentive";
+    public static final String KEY_EVENT_ID = "eventId";
     public static final String KEY_PUSH_TYPE = "pushType";
     public static final String KEY_SEARCHID = "searchId";
     public static final String KEY_TITLE = "title";
@@ -24,7 +27,81 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
     public static final int SEARCH_NOTIFICATION_ID = 234324;
     public static final int APPTENTIVE_NOTIFICATION_ID = 4567546;
 
-//        @Override
+//
+//    @Override
+//    protected Notification getNotification(Context context, Intent intent) {
+//        Notification notification;
+//        if (isSearchNotification(context, intent)) {
+//            notification = getSearchNotification(context, intent);
+//        } else if(isApptentiveNotification(context, intent)) {
+//            notification = getApptentiveNotification(context, intent);
+//        } else {
+//            notification = super.getNotification(context, intent);
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            notification.priority = Notification.PRIORITY_LOW;
+//        }
+//        return lollipopfy(context, notification);
+//    }
+//
+//    private int getApptentiveNotificationCount(Context context) {
+//        return getApptentivePreference(context).get();
+//    }
+//
+//    private void setApptentiveNotificationCount(Context context) {
+//        this.setApptentiveNotificationCount(context, 0);
+//    }
+//    private void setApptentiveNotificationCount(Context context, int count) {
+//        getApptentivePreference(context).set(count);
+//    }
+//
+//    private Notification getApptentiveNotification(Context context, Intent intent) {
+//        int count = getApptentiveNotificationCount(context);
+//        count++;
+//        setApptentiveNotificationCount(context, count);
+//
+//        boolean shouldSummarize = (count > 1);
+//        if (shouldSummarize) {
+//            try {
+//                JSONObject json = new JSONObject(intent.getExtras().getString(KEY_PUSH_DATA));
+//                json.put("title", context.getString(R.string.app_name));
+//                json.put("alert", APPTENTIVE_MESSAGE);
+//                intent.putExtra(KEY_EVENT_ID, json.getString(KEY_EVENT_ID));
+//                intent.putExtra(KEY_PUSH_DATA, json.toString());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        Notification notification = super.getNotification(context, intent);
+//        if (shouldSummarize)
+//            notification.number = count;
+//
+//        return lollipopfy(context, notification);
+//    }
+//
+//    private Notification lollipopfy(Context context, Notification notification) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            notification.color = context.getResources().getColor(R.color.theme_default_primary);
+//        }
+//        return notification;
+//    }
+//
+    @Override
+    protected void onPushOpen(Context context, Intent intent) {
+        Class activityClass = getActivity(context, intent);
+        Intent launchIntent = new Intent(context, activityClass);
+        launchIntent.putExtras(intent.getExtras());
+//        if(Build.VERSION.SDK_INT >= 16) {
+//            TaskStackBuilderHelper.startActivities(context, activityClass, launchIntent);
+//        } else {
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        launchIntent.putExtra(DetailActivity.EXTRA_EVENT_ID, getEventId(context, intent));
+        context.startActivity(launchIntent);
+//        }
+    }
+    //        @Override
 //        protected void onPushReceive(Context context, Intent intent) {
 //
 //            if (isSearchNotification(context, intent))
@@ -181,89 +258,16 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
 //        return lollipopfy(context, notification);
 //    }
 //
-//    public static boolean isApptentiveNotification(Context context, Intent intent) {
-//        try {
-//            JSONObject json = new JSONObject(intent.getExtras().getString(KEY_PUSH_DATA));
-//            if (json.has(KEY_APPTENTIVE)) {
-//                return true;
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    protected Notification getNotification(Context context, Intent intent) {
-//        Notification notification;
-//        if (isSearchNotification(context, intent)) {
-//            notification = getSearchNotification(context, intent);
-//        } else if(isApptentiveNotification(context, intent)) {
-//            notification = getApptentiveNotification(context, intent);
-//        } else {
-//            notification = super.getNotification(context, intent);
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            notification.priority = Notification.PRIORITY_LOW;
-//        }
-//        return lollipopfy(context, notification);
-//    }
-//
-//    private int getApptentiveNotificationCount(Context context) {
-//        return getApptentivePreference(context).get();
-//    }
-//
-//    private void setApptentiveNotificationCount(Context context) {
-//        this.setApptentiveNotificationCount(context, 0);
-//    }
-//    private void setApptentiveNotificationCount(Context context, int count) {
-//        getApptentivePreference(context).set(count);
-//    }
-//
-//    private Notification getApptentiveNotification(Context context, Intent intent) {
-//        int count = getApptentiveNotificationCount(context);
-//        count++;
-//        setApptentiveNotificationCount(context, count);
-//
-//        boolean shouldSummarize = (count > 1);
-//        if (shouldSummarize) {
-//            try {
-//                JSONObject json = new JSONObject(intent.getExtras().getString(KEY_PUSH_DATA));
-//                json.put("title", context.getString(R.string.app_name));
-//                json.put("alert", APPTENTIVE_MESSAGE);
-//                intent.putExtra(KEY_APPTENTIVE, json.getString(KEY_APPTENTIVE));
-//                intent.putExtra(KEY_PUSH_DATA, json.toString());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        Notification notification = super.getNotification(context, intent);
-//        if (shouldSummarize)
-//            notification.number = count;
-//
-//        return lollipopfy(context, notification);
-//    }
-//
-//    private Notification lollipopfy(Context context, Notification notification) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            notification.color = context.getResources().getColor(R.color.theme_default_primary);
-//        }
-//        return notification;
-//    }
-//
-    @Override
-    protected void onPushOpen(Context context, Intent intent) {
-        Class activityClass = getActivity(context, intent);
-        Intent launchIntent = new Intent(context, activityClass);
-        launchIntent.putExtras(intent.getExtras());
-//        if(Build.VERSION.SDK_INT >= 16) {
-//            TaskStackBuilderHelper.startActivities(context, activityClass, launchIntent);
-//        } else {
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(launchIntent);
-//        }
+    public String getEventId(Context context, Intent intent) {
+        try {
+            JSONObject json = new JSONObject(intent.getExtras().getString(KEY_PUSH_DATA));
+            if (json.has(KEY_EVENT_ID)) {
+                return json.getString(KEY_EVENT_ID);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 //
 //    public static Class<? extends Activity> getIndividualActivity(Context context, Intent intent) {
