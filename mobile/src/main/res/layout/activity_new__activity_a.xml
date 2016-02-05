@@ -130,7 +130,7 @@
             android:gravity="center_horizontal|bottom" />
 
         <SeekBar
-            android:layout_width="316dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/time_till_seekBar"
             android:paddingTop="7dp"
@@ -156,7 +156,7 @@
             android:gravity="center_horizontal|bottom" />
 
         <SeekBar
-            android:layout_width="315dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/duration_seekBar"
             android:paddingTop="7dp"
