@@ -103,8 +103,6 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mSort = ((String) adapterView.getItemAtPosition(i));
-                Toast toast = Toast.makeText(getApplicationContext(), "Item: " + Integer.toString(i) + ", " + mSort, Toast.LENGTH_LONG);
-                toast.show();
                 executeQuery();
             }
 
