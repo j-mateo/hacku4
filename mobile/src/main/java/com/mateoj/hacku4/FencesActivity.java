@@ -4,16 +4,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.Geofence;
@@ -26,11 +24,9 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FencesActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        ResultCallback, GoogleApiClient.OnConnectionFailedListener{
+public class FencesActivity extends LocationActivity implements ResultCallback{
     public static final String PREFS_APP = "appPreferences";
     public static final String KEY_LAUNCHED = "appLaunched";
-    GoogleApiClient mGoogleApiClient;
     PendingIntent mGeofencePendingIntent;
     StringPreference firstLaunchedPref;
 
@@ -54,15 +50,6 @@ public class FencesActivity extends AppCompatActivity implements GoogleApiClient
         init();
 
     }
-    private GoogleApiClient buildLocationClient()
-    {
-        return new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
 
     private void setUpGeofences() {
         ParseQuery<Building> query = ParseQuery.getQuery("Building");
@@ -116,26 +103,16 @@ public class FencesActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void init() {
-        mGoogleApiClient = buildLocationClient();
-        mGoogleApiClient.connect();
-
         SharedPreferences sp = getSharedPreferences(PREFS_APP, Context.MODE_PRIVATE);
         firstLaunchedPref = new StringPreference(sp, KEY_LAUNCHED);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        super.onConnected(bundle);
+
         setUpGeofences();
     }
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
 
     private Geofence buildFenceFromBuilding(Building building) {
         return new Geofence.Builder()
@@ -153,8 +130,9 @@ public class FencesActivity extends AppCompatActivity implements GoogleApiClient
         Log.d(TAG, result.toString());
     }
 
+
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, connectionResult.getErrorMessage());
+    public void onLocationChanged(Location location) {
+
     }
 }
