@@ -39,6 +39,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Bind(R.id.textView2)
     TextView subtitle;
 
+    @Bind(R.id.textView6)
+    TextView description;
+
     @Bind(R.id.usersGoing)
     RecyclerView usersGoing;
 
@@ -110,6 +113,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         mEvent = event;
         title.setText(event.getName());
         subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+        description.setText(event.getDescription());
         usersGoing.setAdapter(new UsersListViewAdapter(event.getUsersGoing()));
         if (isMapReady) {
             moveCameraToLocation();
