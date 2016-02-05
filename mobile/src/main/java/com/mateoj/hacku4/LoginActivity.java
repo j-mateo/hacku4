@@ -3,6 +3,7 @@ package com.mateoj.hacku4;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,15 +23,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        titleTextView = (TextView) findViewById(R.id.textView);
-        loginOrLogoutButton = (Button) findViewById(R.id.log_in_log_out_button);
-
-        Parse.initialize(this);
-        loginOrLogoutButton.setOnClickListener(new View.OnClickListener() {
+        ParseLoginBuilder builder = new ParseLoginBuilder(LoginActivity.this);
+        startActivityForResult(builder.build(), 0);
+       /* loginOrLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentUser != null) {
+                if (currentUser.getCurrentUser() != null || currentUser.isAuthenticated()) {
                     // User clicked to log out.
                     ParseUser.logOut();
                     currentUser = null;
@@ -41,8 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivityForResult(builder.build(), 0);
                 }
             }
-        });
-
+        });*/
     }
 
     @Override
@@ -54,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     private void showProfileLoggedOut() {
         titleTextView.setText("You must log in!");
         loginOrLogoutButton.setText("Log in");
@@ -62,5 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showProfileLoggedIn() {
         titleTextView.setText("Welcome!!");
         loginOrLogoutButton.setText("Log Out");
+
     }
+
 }
