@@ -9,6 +9,7 @@ import com.parse.ParseObject;
  */
 @ParseClassName("Building")
 public class Building extends ParseObject {
+    public static final String KEY_LOCATION ="LatLong";
     @Override
     public String toString() {
         return getString("Name");

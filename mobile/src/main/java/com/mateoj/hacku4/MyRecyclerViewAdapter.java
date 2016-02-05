@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView
         .Adapter<MyRecyclerViewAdapter
@@ -53,20 +54,29 @@ public class MyRecyclerViewAdapter extends RecyclerView
         return dataObjectHolder;
     }
 
+    public void clear() {
+        mDataset.clear();
+    }
+
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.label.setText(mDataset.get(position).getName());
-        holder.dateTime.setText(mDataset.get(position).getStart().toString());
+//        holder.dateTime.setText(mDataset.get(position).getStart().toString());
     }
 
-    public void addItem(Event dataObj, int index) {
+    public void addItem(Event dataObj) {
         mDataset.add(dataObj);
-        notifyItemInserted(index);
+        notifyDataSetChanged();
     }
 
     public void deleteItem(int index) {
         mDataset.remove(index);
         notifyItemRemoved(index);
+    }
+
+    public void addAll(List<Event> eventList) {
+        mDataset.addAll(eventList);
+        notifyDataSetChanged();
     }
 
     @Override
