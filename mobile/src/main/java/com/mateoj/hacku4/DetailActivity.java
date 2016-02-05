@@ -11,6 +11,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -20,13 +26,17 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String EXTRA_EVENT_ID = "eventId";
     @Bind(R.id.textView)
     TextView title;
 
     @Bind(R.id.textView2)
     TextView subtitle;
+
+    private Event mEvent;
+    private boolean isMapReady = false;
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +61,15 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             throw new IllegalArgumentException("Must instantiate using the getLaunchIntent");
         }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(this);
+
     }
 
     private void fetchEvent(String objectId) {
         ParseQuery.getQuery(Event.class)
+                .include("Location")
                 .getInBackground(objectId, new GetCallback<Event>() {
                     @Override
                     public void done(Event object, ParseException e) {
@@ -68,9 +83,19 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initEvent(Event event) {
+        mEvent = event;
         title.setText(event.getName());
         subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+        if (isMapReady) {
+            moveCameraToLocation();
+        }
 
+    }
+
+    private void moveCameraToLocation() {
+        LatLng location = new LatLng(mEvent.getLocation().getLocation().getLatitude(), mEvent.getLocation().getLocation().getLongitude());
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+        mGoogleMap.addMarker(new MarkerOptions().position(location).title(mEvent.getLocation().getName()));
     }
 
     public static Intent getLaunchIntent(Context context, Event event) {
@@ -80,4 +105,12 @@ public class DetailActivity extends AppCompatActivity {
         return intent;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        isMapReady = true;
+        mGoogleMap = googleMap;
+        if (mEvent != null) {
+            moveCameraToLocation();
+        }
+    }
 }

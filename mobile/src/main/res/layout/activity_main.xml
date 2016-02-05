@@ -6,11 +6,36 @@
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true"
                                                  tools:context="com.mateoj.hacku4.DetailActivity">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+            <Spinner
+                android:id="@+id/sortSpinner"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:dropDownSelector="@android:drawable/spinner_dropdown_background"
+                android:entries="@array/sort"/>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbars="vertical" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"

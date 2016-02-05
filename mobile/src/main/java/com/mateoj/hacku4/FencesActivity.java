@@ -52,6 +52,8 @@ public class FencesActivity extends LocationActivity implements ResultCallback{
     }
 
     private void setUpGeofences() {
+        LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, getGeofencePendingIntent());
+
         ParseQuery<Building> query = ParseQuery.getQuery("Building");
         query.findInBackground(new FindCallback<Building>() {
             @Override
@@ -90,10 +92,8 @@ public class FencesActivity extends LocationActivity implements ResultCallback{
         Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
         // calling addGeofences() and removeGeofences().
-        mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
+        return PendingIntent.getService(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
-
-        return mGeofencePendingIntent;
     }
 
     private GeofencingRequest getGeoFencingRequest(List<Geofence> geofences)
@@ -120,8 +120,8 @@ public class FencesActivity extends LocationActivity implements ResultCallback{
         return new Geofence.Builder()
                 .setRequestId(building.getObjectId())
                 .setCircularRegion(building.getLocation().getLatitude(),
-                        building.getLocation().getLongitude(), 600)
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        building.getLocation().getLongitude(), 400)
+                .setExpirationDuration(60 * 60 * 1000)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
     }

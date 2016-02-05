@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 /**
@@ -17,6 +18,7 @@ public class HackUApp extends Application{
     public void onCreate() {
         super.onCreate();
         Parse.initialize(this);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseObject.registerSubclass(Building.class);
         ParseObject.registerSubclass(Event.class);
     }
