@@ -55,7 +55,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
-
         if (getIntent().hasExtra(EXTRA_EVENT_ID)) {
             String objectId = getIntent().getStringExtra(EXTRA_EVENT_ID);
             fetchEvent(objectId);

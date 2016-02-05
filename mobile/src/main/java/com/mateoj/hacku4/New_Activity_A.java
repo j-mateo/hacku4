@@ -11,6 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParsePush;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.joda.time.DateTime;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -24,6 +37,8 @@ public class New_Activity_A extends AppCompatActivity {
     private Button entertainment;
     private Button misc;
     private Button nextScreen;
+    private Button submitButton;
+    ParseGeoPoint mPlace;
 
     private EditText eventName;
     private EditText eventDescription;
@@ -37,6 +52,21 @@ public class New_Activity_A extends AppCompatActivity {
     boolean nlbool = false;
     boolean enterbool = false;
     boolean miscbool = false;
+
+    int PLACE_PICKER_REQUEST = 1;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                mPlace = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +82,7 @@ public class New_Activity_A extends AppCompatActivity {
         nightlife = (Button) findViewById(R.id.night_life_button);
         entertainment = (Button) findViewById(R.id.entertainment_button);
         misc = (Button) findViewById(R.id.misc_button);
+        submitButton = (Button) findViewById(R.id.submitButton);
 
         nextScreen = (Button) findViewById(R.id.next_button);
 
@@ -116,26 +147,71 @@ public class New_Activity_A extends AppCompatActivity {
         nextScreen.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("New_Activity_A.java", "Clicked to proceed to next page!");
-                Intent i = new Intent(New_Activity_A.this, New_Activity_B.class);
-                i.putExtra("myName", eventName.getText().toString());
-                i.putExtra("myDescription", eventDescription.getText().toString());
-                i.putExtra("time_till", timeTill.getProgress());
-                i.putExtra("time_duration", duration.getProgress());
 
-                ArrayList<String> myTags = new ArrayList<>();
-                if(foodbool) { myTags.add("Food"); }
-                if(sportsbool) { myTags.add("Sport"); }
-                if(acadbool) { myTags.add("Academic"); }
-                if(nlbool) { myTags.add("Night Life"); }
-                if(enterbool) { myTags.add("Entertainment"); }
-                if(miscbool) { myTags.add("Miscellaneous"); }
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
-                i.putStringArrayListExtra("myTags", myTags);
-                startActivity(i);
+                try {
+                    startActivityForResult(builder.build(New_Activity_A.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+//                Log.v("New_Activity_A.java", "Clicked to proceed to next page!");
+//                Intent i = new Intent(New_Activity_A.this, New_Activity_B.class);
+//                i.putExtra("myName", eventName.getText().toString());
+//                i.putExtra("myDescription", eventDescription.getText().toString());
+//                i.putExtra("time_till", timeTill.getProgress());
+//                i.putExtra("time_duration", duration.getProgress());
+//
+//                ArrayList<String> myTags = new ArrayList<>();
+//                if(foodbool) { myTags.add("Food"); }
+//                if(sportsbool) { myTags.add("Sport"); }
+//                if(acadbool) { myTags.add("Academic"); }
+//                if(nlbool) { myTags.add("Night Life"); }
+//                if(enterbool) { myTags.add("Entertainment"); }
+//                if(miscbool) { myTags.add("Miscellaneous"); }
+//
+//                i.putStringArrayListExtra("myTags", myTags);
+//                startActivity(i);
             }
         });
 
+        submitButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("New_Activity_B.java", "Yes hello.");
+                final Event newEvent = new Event();
+                newEvent.setName(eventName.getText().toString());
+                newEvent.setDescription(eventDescription.getText().toString());
+                DateTime timeNow = new DateTime();
+                newEvent.setStart(timeNow.plusMinutes(timeTill.getProgress()));
+                newEvent.setEnd(timeNow.plusMinutes(timeTill.getProgress() + duration.getProgress()));
+                if(foodbool) { newEvent.setTag("Food"); }
+                if(sportsbool) { newEvent.setTag("Sport"); }
+                if(acadbool) { newEvent.setTag("Academic"); }
+                if(nlbool) { newEvent.setTag("NightLife"); }
+                if(enterbool) { newEvent.setTag("Entertainment"); }
+                if(miscbool) { newEvent.setTag("Miscellaneous"); }
+                newEvent.setLocation(mPlace);
+                newEvent.setOwner(ParseUser.getCurrentUser());
+                newEvent.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        } else {
+                            ParsePush push = new ParsePush();
+                            push.setChannel(newEvent.getTag());
+                            push.setMessage(newEvent.getName());
+                            push.sendInBackground();
+                        }
+                    }
+                });
+                Toast.makeText(New_Activity_A.this, "Event Created!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
 
         timeTill.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -167,7 +243,8 @@ public class New_Activity_A extends AppCompatActivity {
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
     }
 
