@@ -9,14 +9,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.Locale;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT_ID = "eventId";
+    @Bind(R.id.textView)
+    TextView title;
+
+    @Bind(R.id.textView2)
+    TextView subtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,6 +56,32 @@ public class DetailActivity extends AppCompatActivity {
         TextView location = (TextView) findViewById(R.id.textView);
         location.setText(
                 "Arb Location Dude");
+
+        if (getIntent().hasExtra(EXTRA_EVENT_ID)) {
+            String objectId = getIntent().getStringExtra(EXTRA_EVENT_ID);
+            fetchEvent(objectId);
+        } else {
+            throw new IllegalArgumentException("Must instantiate using the getLaunchIntent");
+        }
+    }
+
+    private void fetchEvent(String objectId) {
+        ParseQuery.getQuery(Event.class)
+                .getInBackground(objectId, new GetCallback<Event>() {
+                    @Override
+                    public void done(Event object, ParseException e) {
+                        if (e != null) {
+                            Toast.makeText(DetailActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            initEvent(object);
+                        }
+                    }
+                });
+    }
+
+    private void initEvent(Event event) {
+        title.setText(event.getName());
+        subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
     }
 
     public static Intent getLaunchIntent(Context context, Event event) {

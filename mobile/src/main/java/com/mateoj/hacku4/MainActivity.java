@@ -1,6 +1,5 @@
 package com.mateoj.hacku4;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,10 +72,7 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
 
     @Override
     public void onItemClick(int position, View v) {
-        Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(position), Toast.LENGTH_LONG);
-        toast.show();
-        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-        startActivity(i);
+        startActivity(DetailActivity.getLaunchIntent(this, mAdapter.getItem(position)));
     }
 
     @Override
