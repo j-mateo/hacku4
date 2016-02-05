@@ -16,9 +16,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
-        if(ParseUser.getCurrentUser() == null || !ParseUser.getCurrentUser().isAuthenticated()) {
+        if(ParseUser.getCurrentUser() == null || ParseUser.getCurrentUser().isAuthenticated()) {
             ParseLoginBuilder builder = new ParseLoginBuilder(this);
-            builder.setAppLogo(R.mipmap.ic_launcher);
+            builder.setAppLogo(R.drawable.login_logo);
             startActivityForResult(builder.build(), 0);
         }
         else{
