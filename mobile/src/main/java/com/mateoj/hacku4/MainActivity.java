@@ -8,8 +8,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
@@ -39,12 +42,16 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean isQueryInProgress = false;
     private boolean needsData = true;
+    private String mSort = "near";
+    private Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        initSortSpinner();
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -75,7 +82,22 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         Log.d(TAG, result.toString());
     }
 
+    private void initSortSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.sortSpinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mSort = ((String) adapterView.getItemAtPosition(i)).toLowerCase();
+                executeQuery();
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
     private PendingIntent getGeofencePendingIntent() {
         // Reuse the PendingIntent if we already have it.
         if (mGeofencePendingIntent != null) {
@@ -166,14 +188,29 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
 
     @Override
     public void onLocationChanged(Location location) {
+        mLastLocation = location;
         if (isQueryInProgress || !needsData)
+            return;
+
+        executeQuery();
+    }
+
+    private void executeQuery() {
+        if (mLastLocation == null)
             return;
 
         ParseQuery<Building> buildingQuery = ParseQuery.getQuery(Building.class);
 
-        buildingQuery.whereNear(Building.KEY_LOCATION, new ParseGeoPoint(location.getLatitude(),
-                location.getLongitude()));
+        buildingQuery.whereNear(Building.KEY_LOCATION, new ParseGeoPoint(mLastLocation.getLatitude(),
+                mLastLocation.getLongitude()));
         isQueryInProgress = true;
+
+        if (mSort.equals("upcoming")) {
+            buildingQuery.orderByAscending("Time");
+        } else {
+            buildingQuery.orderByAscending("Location");
+        }
+
         buildingQuery.findInBackground(new FindCallback<Building>() {
             @Override
             public void done(List<Building> objects, ParseException e) {

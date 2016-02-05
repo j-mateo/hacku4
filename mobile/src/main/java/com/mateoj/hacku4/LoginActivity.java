@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        //Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
+        //Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);N
 
         //ParseFacebookUtils.initialize(this);
 
