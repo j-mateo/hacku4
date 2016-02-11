@@ -46,8 +46,14 @@ public class Event extends ParseObject{
         put("Location", building);
     }
 
-    public String getDescription() { return description; }
-    public void setDescription(String text3) { put("Description",text3); }
+    public String getDescription() {
+        if (getString("Description") == null) {
+            return "";
+        }
+        return getString("Description"); }
+    public void setDescription(String text3) {
+        description = text3;
+        put("Description",text3); }
 
     public DateTime getStart() {
         return getDate("Time") == null ?  new DateTime() : new DateTime(getDate("Time")) ;

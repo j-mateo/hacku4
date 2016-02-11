@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -39,6 +37,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Bind(R.id.textView2)
     TextView subtitle;
+
+    @Bind(R.id.textView6)
+    TextView description;
 
     @Bind(R.id.usersGoing)
     RecyclerView usersGoing;
@@ -111,6 +112,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         mEvent = event;
         title.setText(event.getName());
         subtitle.setText(event.getEnd().toString("HH:mm", Locale.US));
+        description.setText(event.getDescription());
         usersGoing.setAdapter(new UsersListViewAdapter(event.getUsersGoing()));
         if (isMapReady) {
             moveCameraToLocation();
