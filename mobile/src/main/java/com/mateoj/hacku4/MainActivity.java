@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -62,15 +64,12 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
         mAdapter = new MyRecyclerViewAdapter(getDataSet());
         mAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
-       // RecyclerView.ItemDecoration itemDecoration =
-       //         new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-       // mRecyclerView.addItemDecoration(itemDecoration);
 
         createEvent = (FloatingActionButton) findViewById(R.id.fab2);
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, New_Activity_A.class);
+                Intent i = new Intent(MainActivity.this, NewEventActivity.class);
                 startActivity(i);
             }
         });
@@ -88,6 +87,29 @@ public class MainActivity extends LocationActivity implements MyRecyclerViewAdap
                 .build();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings : {
+                openSettings();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openSettings() {
+        startActivity(new Intent(this, InterestActivity.class));
+    }
 
     @Override
     public void onResult(Result result) {
